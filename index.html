@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>The Trivia Show!</title>
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<script src="js/soundmanager2.js"></script>
+	<script src="js/lowlag.js"></script>
+	<style>
+		.players-list {
+			display: table;
+		}
+		.player {
+			display: table-row;
+		}
+		.player-name, .player-score {
+			display: table-cell;
+		}
+	</style>
+</head>
+<body>
+<h1>Scout Trivia!</h1>
+<div class="start"><button>Up to Start</button></div>
+<div class="question"></div>
+<div class="answer"></div>
+<div id="players">
+	Players:
+	<div class="players-list">
+		<div class="player">
+			<div class="player-name">Green</div>
+			<div class="player-score" id="Green-score">0</div>
+		</div>
+		<div class="player">
+			<div class="player-name">White</div>
+			<div class="player-score" id="White-score">0</div>
+		</div>
+		<div class="player">
+			<div class="player-name">Yellow</div>
+			<div class="player-score" id="Yellow-score">0</div>
+		</div>
+		<div class="player">
+			<div class="player-name">Blue</div>
+			<div class="player-score" id="Blue-score">0</div>
+		</div>
+		<div class="player">
+			<div class="player-name">Red</div>
+			<div class="player-score" id="Red-score">0</div>
+		</div>
+	</div>
+	<div class="question"></div>
+	<div class="answer"></div>
+</div>
+<script type="text/javascript" src="js/trivia-show.js"></script>
+</body>
+</html>
