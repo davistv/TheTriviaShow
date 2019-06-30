@@ -36,7 +36,8 @@ body {
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
-	font-size: 16px;
+	font-size: 48px;
+	font-weight: bold;
 }
 
 .question-container, .answer-container {
@@ -57,6 +58,20 @@ body {
 	vertical-align: middle; 
 	text-align: center;
 	font-size: 48px;
+}
+
+.answer {
+	color: green;
+}
+
+.correct-answer-check {
+	color: green;
+	font-weight: bold;
+}
+
+.wrong-answer-x {
+	color: red;
+	font-weight: bold;
 }
 
 #scoreboard {
