@@ -1,14 +1,17 @@
+// Configure these for your situation
+var numQuestions = 10;  // how many questions to be asked during a round?
+var contestantKeys = ['a', 'w', 's', 'd', 'f']; // each contestant uses a key, configure them here, 5 players assumed right now
+var quickShowPause = 100; // several pause lengths
+var mediumShowPause = 500;
+var answerPause = 3000;
+var endGamePause = 12000;
+
+// You shouldn't have to configure anything below here
 var questions;
 var shuffledQuestions;
 var audioStarted = 0;
 var gameStarted = 0;
-var numQuestions = 10;
 var questionsAsked = 0;
-var quickShowPause = 100;
-var mediumShowPause = 500;
-var answerPause = 3000;
-var endGamePause = 12000;
-var contestantKeys = ['a', 'w', 's', 'd', 'f'];
 var contestantQueue = [];
 var showingQuestion  = 0;
 var questionsAskedThisGame = [];
@@ -231,7 +234,7 @@ function handleKey(key) {
 				var newScore = parseInt(oldScore) + 1;
 				$('.player-score.' + thisContestant).html(newScore);
 				$('.player-order.' + thisContestant).html("<span class='correct-answer-check'>√</span>");
-				$('.answer').html(thisQuestion[1]);
+				$('.answer').html(thisQuestion[1]).show(quickShowPause);
 				
 				// end game if we have a winner, tie breaker if not
 				if (questionsAsked >= numQuestions) {
