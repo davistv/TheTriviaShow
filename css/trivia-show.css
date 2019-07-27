@@ -14,6 +14,14 @@ body {
 	font-size: 64px;
 }
 
+.header .questionCounter {
+	float: right;
+	margin-right: .2em;
+	padding-top: .2em;
+	font-size: 64px;
+	visibility: hidden;
+}
+
 .start {
 	display: table;
 	height: 400px;

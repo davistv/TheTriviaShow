@@ -4,7 +4,7 @@ var contestantKeys = ['a', 'w', 's', 'd', 'f']; // each contestant uses a key, c
 var quickShowPause = 100; // several pause lengths
 var mediumShowPause = 500;
 var answerPause = 3000;
-var endGamePause = 12000;
+var endGamePause = 5000;
 
 // You shouldn't have to configure anything below here
 var questions;
@@ -14,7 +14,6 @@ var gameStarted = 0;
 var questionsAsked = 0;
 var contestantQueue = [];
 var showingQuestion  = 0;
-var questionsAskedThisGame = [];
 var thisQuestion;
 
 function loadQuestions() {
@@ -22,6 +21,7 @@ function loadQuestions() {
 		type: "GET",
 		url: "questions.csv",
 		dataType: "text",
+		async: false,
 		success: function(response)  {
 			questions = $.csv.toArrays(response);
 			questions.shift(); // drop header line
@@ -114,16 +114,24 @@ function showQuestion() {
 	showingQuestion = 1;
 	contestantQueue = [];
 	$('.player-order').hide(mediumShowPause);
-	thisQuestion = shuffledQuestions.shift();
+	// console.log("shuffledQuestions.length = " + shuffledQuestions.length);
+	if (shuffledQuestions.length < 1) {
+		console.log("Reloading questions list.");
+		loadQuestions();
+		thisQuestion = shuffledQuestions.shift();
+	} else {
+		thisQuestion = shuffledQuestions.shift();
+	}
 	var thisHtmlQuestion = thisQuestion[0].replace(/(?:\r\n|\r|\n)/g, '<br>');
 	$('.question').html(thisHtmlQuestion);
 	questionsAsked++;
+	$('.currentQuestionCount').html(questionsAsked);
+	$('.numQuestions').html(numQuestions);
+	if ($('.questionCounter').css('visibility') == 'hidden') {
+		$('.questionCounter').css('visibility', 'visible');
+	}
 	console.warn("Question: " + thisQuestion[0]);
 	console.error("Answer: " + thisQuestion[1])
-}
-
-function showAnswer() {
-	showingAnswer = 1;
 }
 
 function findWinner() {
@@ -156,21 +164,26 @@ function findWinner() {
 	return winners;
 }
 
-function endGameCheck(thisContestant) {
+function endGameCheck() {
 	var winners = findWinner();
 	if (winners.length == 1) {
 		showingQuestion = 0;
-		console.error(capitalize(key2color(thisContestant)) + " Player Wins!");
+		console.error(capitalize(key2color(winners[0])) + " Player Wins!");
 		$('.answer').html("");
-		$('.question').html("Congratulations " + capitalize(key2color(thisContestant)) + " Player!");
+		$('.question').html("Congratulations " + capitalize(key2color(winners[0])) + " Player!");
 		lowLag.play("sfx/winner.mp3");
 		gameStarted = 0;
+		questionsAsked = 0;
+		showingQuestion = 0;
 		setTimeout(function(){
 			$('.question').hide(quickShowPause);
-			$('.start').show(mediumShowPause);
+			if (!gameStarted) {
+				$('.start').show(mediumShowPause);
+			}
 			$('.player-order').hide(quickShowPause);
 			$('.player-order').html("");
 			$('.player-score').html("0");
+			$('.questionCounter').css('visibility', 'hidden');
 			console.clear();
 		}, endGamePause);
 	} else {
@@ -187,7 +200,6 @@ function endGameCheck(thisContestant) {
 function handleKey(key) {
 	if (!gameStarted) { //  game isn't started yet
 		if (key == 'PageUp') {
-			loadQuestions();
 			startup();
 			lowLag.play("sfx/start.mp3");
 		} else if (key == 'PageDown') {
@@ -238,7 +250,7 @@ function handleKey(key) {
 				
 				// end game if we have a winner, tie breaker if not
 				if (questionsAsked >= numQuestions) {
-					endGameCheck(thisContestant);
+					endGameCheck();
 				} else { // show the next question
 					showingQuestion = 0;
 					setTimeout(function(){
@@ -253,7 +265,7 @@ function handleKey(key) {
 				//  Advance to the next question if nobody left in the queue
 				if (contestantQueue.length == 0) {
 					if (questionsAsked >= numQuestions) {
-						endGameCheck(thisContestant);
+						endGameCheck();
 					} else {
 						showingQuestion = 0;
 						$('.answer').html(thisQuestion[1]);
